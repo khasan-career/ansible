@@ -1,0 +1,56 @@
+- name: Show MySQL root password
+  debug:
+    var: vault_mysql_root_password
+
+- name: Debug whoami
+  command: whoami
+  become: yes
+
+- name: Install MySQL
+  apt:
+    name: mysql-server
+    state: present
+    update_cache: yes
+
+- name: Install Python MySQL library (PyMySQL)
+  apt:
+    name: python3-pymysql
+    state: present
+    update_cache: yes
+
+- name: Start MySQL
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Change MySQL root authentication plugin to mysql_native_password
+  mysql_user:
+    name: root
+    host: localhost
+    password: "{{ vault_mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: "{{ vault_mysql_root_password }}"
+    check_implicit_admin: yes
+    plugin: mysql_native_password
+    state: present
+    column_case_sensitive: false
+  become: true
+
+- name: Set MySQL root password
+  mysql_user:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: root
+    host_all: yes
+    password: "{{ mysql_root_password }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+
+- name: Create lab database
+  mysql_db:
+    name: "{{ mysql_db_name }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"

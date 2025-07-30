@@ -1,0 +1,9 @@
+---
+- hosts: dbservers
+  gather_facts: false
+  vars_files:
+    - vault.yml
+  tasks:
+    - debug:
+        var: vault_mysql_root_password
+

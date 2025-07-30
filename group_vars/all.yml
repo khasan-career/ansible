@@ -1,0 +1,3 @@
+app_name: "Ansible Lab WebApp"
+mysql_root_password: "{{ vault_mysql_root_password }}"
+mysql_db_name: "lab_db"
