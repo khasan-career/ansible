@@ -103,7 +103,7 @@ Run the playbook:
 Check service running via SSH to appserver.
 
 ✅ Database Layer:
-# mysql -u root -pMySecurePass123
+# mysql -u root -p
 
 📌 Security Best Practices
 - No hardcoded passwords, used Ansible Vault.
